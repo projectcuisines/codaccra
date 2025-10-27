@@ -37,4 +37,5 @@ jobs:
         name: codaccra_photochemclima
         path: |
           ${{github.workspace}}/PhotochemClima/results/*.txt
+          ${{github.workspace}}/PhotochemClima/results/*.pdf
         if-no-files-found: error

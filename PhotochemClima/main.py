@@ -154,6 +154,8 @@ def main_I_1(data_dir=None):
         star_temperature=5772, 
         atmosphere_description='Modern Earth'
     )
+    fig, ax, ax1 = plot(c)
+    plt.savefig('results/codaccra_photochemclima_I-1a.pdf',bbox_inches='tight')
 
 ###
 ### II-1: Modern Earth (RCE)
@@ -206,6 +208,8 @@ def main_II_1():
         star_temperature=5772, 
         atmosphere_description='Modern Earth'
     )
+    fig, ax, ax1 = plot(c)
+    plt.savefig('results/codaccra_photochemclima_II-1.pdf',bbox_inches='tight')
 
 ###
 ### III-7: TRAPPIST-1 g
@@ -272,27 +276,28 @@ def main_III_7():
     c = run_trappist1g(
         P_CO2=5, 
         T_trop_guess=200, 
-        T_surf_guess=300
+        T_surf_guess=300,
+        max_rc_iters_convection=-1
     )
     write_trappist1g_outputfile(c, 'results/codaccra_photochemclima_III-7a.txt', 'TRAPPIST1g CO2=5bar')
     fig, ax, ax1 = plot(c)
     ax.set_ylim(12,2e-5)
     ax.set_xlim(1e-8,2)
     ax1.set_xlim(150,300)
-    plt.savefig('results/TRAPPIST1g_CO2=5bar.pdf',bbox_inches='tight')
+    plt.savefig('results/codaccra_photochemclima_III-7a.pdf',bbox_inches='tight')
 
     c = run_trappist1g(
         P_CO2=10, 
         T_trop_guess=205, 
         T_surf_guess=300,
-        max_rc_iters_convection=1
+        max_rc_iters_convection=-1
     )
     write_trappist1g_outputfile(c, 'results/codaccra_photochemclima_III-7b.txt', 'TRAPPIST1g CO2=10bar')
     fig, ax, ax1 = plot(c)
     ax.set_ylim(12,2e-5)
     ax.set_xlim(1e-8,2)
     ax1.set_xlim(150,300)
-    plt.savefig('results/TRAPPIST1g_CO2=10bar.pdf',bbox_inches='tight')
+    plt.savefig('results/codaccra_photochemclima_III-7b.pdf',bbox_inches='tight')
 
 ###
 ### Setup for all models
