@@ -4,8 +4,8 @@ from photochem.utils import settings_file_for_climate, species_file_for_climate
 
 import numpy as np
 from matplotlib import pyplot as plt
-from threadpoolctl import threadpool_limits
-_ = threadpool_limits(limits=4)
+# from threadpoolctl import threadpool_limits
+# _ = threadpool_limits(limits=4)
 
 ###
 ### Utils needed for all cases
