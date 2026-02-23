@@ -1,0 +1,41 @@
+name: Run photochem.clima codaccra tests
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Specifies the runner environment
+
+    steps:
+
+    # Checkout the repo
+    - uses: actions/checkout@v4
+
+    # Set up environment
+    - uses: mamba-org/setup-micromamba@v2
+      with:
+        generate-run-shell: true
+        environment-name: codaccra
+        cache-environment: true
+        cache-downloads: true
+        create-args: >-
+          -c conda-forge
+          python=3.11
+          photochem=0.6.7
+          matplotlib
+      
+    # Run main script
+    - name: Run main
+      working-directory: ${{github.workspace}}/PhotochemClima
+      shell: micromamba-shell {0}
+      run: python main.py
+
+    # Upload the results
+    - name: Upload results
+      uses: actions/upload-artifact@v4
+      with:
+        name: codaccra_photochemclima
+        path: |
+          ${{github.workspace}}/PhotochemClima/results/*.txt
+          ${{github.workspace}}/PhotochemClima/results/*.pdf
+        if-no-files-found: error
