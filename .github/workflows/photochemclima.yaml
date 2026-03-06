@@ -16,12 +16,10 @@ jobs:
       with:
         generate-run-shell: true
         environment-name: codaccra
-        cache-environment: true
-        cache-downloads: true
         create-args: >-
           -c conda-forge
-          python=3.11
-          photochem=0.6.7
+          python=3.13
+          photochem=0.8.3
           matplotlib
       
     # Run main script
