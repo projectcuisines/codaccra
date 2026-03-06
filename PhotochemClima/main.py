@@ -142,7 +142,7 @@ def main_I_1(test):
 
     c = AdiabatClimate(
         'inputs/species.yaml',
-        'inputs/settings_I1.yaml',
+        f'inputs/settings_I1{test}.yaml',
         'inputs/stellar_flux_Earth.txt',
         data_dir=data_dir
     )
@@ -197,7 +197,7 @@ def main_II_1():
 
     c.rad.surface_albedo = np.ones(len(c.rad.surface_albedo))*0.32
     c.rad.surface_emissivity = np.ones(len(c.rad.surface_emissivity))*0.9
-    c.P_top = 1
+    c.P_top = 10
     c.RH = np.ones(len(c.species_names))*1.0
     c.max_rc_iters = 30
 
@@ -272,7 +272,7 @@ def run_trappist1g(P_CO2, T_trop_guess, T_surf_guess):
 
     # Various settings
     c.RH = np.ones(len(c.species_names))*1
-    c.P_top = 1
+    c.P_top = 10
     c.max_rc_iters = 30
     c.max_rc_iters_convection = -1
     c.convective_max_boundary_shift = 1
