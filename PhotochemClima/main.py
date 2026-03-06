@@ -4,8 +4,7 @@ from photochem.utils import settings_file_for_climate, species_file_for_climate
 
 import numpy as np
 from matplotlib import pyplot as plt
-# from threadpoolctl import threadpool_limits
-# _ = threadpool_limits(limits=4)
+from threadpoolctl import threadpool_limits
 
 ###
 ### Utils needed for all cases
@@ -62,9 +61,9 @@ P (Pa)        T (K)         MMW (g/mol)   Alt (km)      N2            CO2       
     tmp1 += fmt.format('%.4f'%(c.T_surf))
     tmp1 += fmt.format('%.4f'%(mmw[0]))
     tmp1 += fmt.format('%.4f'%(0.0))
-    tmp1 += fmt.format('%.4e'%(c.f_i[0,2]))
-    tmp1 += fmt.format('%.4e'%(c.f_i[0,1]))
-    tmp1 += fmt.format('%.4e'%(c.f_i[0,0]))
+    tmp1 += fmt.format('%.4e'%(c.f_i_surf[2]))
+    tmp1 += fmt.format('%.4e'%(c.f_i_surf[1]))
+    tmp1 += fmt.format('%.4e'%(c.f_i_surf[0]))
     tmp1 += fmt.format('%.4e'%(OLRs[0]))
     tmp1 += fmt.format('%.4e'%(ASRs[0]))
     tmp1 += '\n'
@@ -113,23 +112,39 @@ def plot(c):
 ### I-1: Modern Earth (Inverse)
 ###
 
-def main_I_1(data_dir=None):
+def main_I_1(test):
+
+    if test == 'a':
+        data_dir = None
+        opacities = None
+    elif test == 'b':
+        data_dir = 'common_opacities'
+        opacities = {
+            'k-distributions': True, 
+            'CIA': True, 
+            'rayleigh': True, 
+        }
+    else:
+        raise ValueError()
+
 
     # First make settings file.
     settings_file_for_climate(
-        filename='inputs/settings_I1.yaml', 
+        filename=f'inputs/settings_I1{test}.yaml', 
         planet_mass=5.972e27,
         planet_radius=6.371e8,
         surface_albedo=0.32, 
         number_of_layers=200, 
         number_of_zenith_angles=4, 
-        photon_scale_factor=0.98771561409974729
+        photon_scale_factor=0.98771561409974729,
+        opacities=opacities
     )
 
     c = AdiabatClimate(
         'inputs/species.yaml',
         'inputs/settings_I1.yaml',
         'inputs/stellar_flux_Earth.txt',
+        data_dir=data_dir
     )
 
     _, _, z, P, T, N2, CO2, H2O = np.loadtxt('inputs/input_Modern_Earth.txt',skiprows=15).T
@@ -146,7 +161,7 @@ def main_I_1(data_dir=None):
 
     write_outputfile(
         c, 
-        filename='results/codaccra_photochemclima_I-1a.txt',
+        filename=f'results/codaccra_photochemclima_I-1{test}.txt',
         planet_diameter=12742, 
         planet_gravity= 9.81, 
         star_distance=1, 
@@ -155,7 +170,7 @@ def main_I_1(data_dir=None):
         atmosphere_description='Modern Earth'
     )
     fig, ax, ax1 = plot(c)
-    plt.savefig('results/codaccra_photochemclima_I-1a.pdf',bbox_inches='tight')
+    plt.savefig(f'results/codaccra_photochemclima_I-1{test}.pdf',bbox_inches='tight')
 
 ###
 ### II-1: Modern Earth (RCE)
@@ -182,7 +197,7 @@ def main_II_1():
 
     c.rad.surface_albedo = np.ones(len(c.rad.surface_albedo))*0.32
     c.rad.surface_emissivity = np.ones(len(c.rad.surface_emissivity))*0.9
-    c.P_top = 1e2
+    c.P_top = 1
     c.RH = np.ones(len(c.species_names))*1.0
     c.max_rc_iters = 30
 
@@ -230,7 +245,7 @@ def write_trappist1g_outputfile(c, filename, atmosphere_description):
         atmosphere_description=atmosphere_description
     )
 
-def run_trappist1g(P_CO2, T_trop_guess, T_surf_guess, max_rc_iters_convection=5):
+def run_trappist1g(P_CO2, T_trop_guess, T_surf_guess):
 
     settings_file_for_climate(
         filename='inputs/settings_III7.yaml', 
@@ -257,10 +272,10 @@ def run_trappist1g(P_CO2, T_trop_guess, T_surf_guess, max_rc_iters_convection=5)
 
     # Various settings
     c.RH = np.ones(len(c.species_names))*1
-    c.P_top = 10
-    c.xtol_rc = 1e-8
+    c.P_top = 1
     c.max_rc_iters = 30
-    c.max_rc_iters_convection = max_rc_iters_convection
+    c.max_rc_iters_convection = -1
+    c.convective_max_boundary_shift = 1
 
     # Initial guess
     c.T_trop = T_trop_guess
@@ -276,8 +291,7 @@ def main_III_7():
     c = run_trappist1g(
         P_CO2=5, 
         T_trop_guess=200, 
-        T_surf_guess=300,
-        max_rc_iters_convection=-1
+        T_surf_guess=270,
     )
     write_trappist1g_outputfile(c, 'results/codaccra_photochemclima_III-7a.txt', 'TRAPPIST1g CO2=5bar')
     fig, ax, ax1 = plot(c)
@@ -290,7 +304,6 @@ def main_III_7():
         P_CO2=10, 
         T_trop_guess=205, 
         T_surf_guess=300,
-        max_rc_iters_convection=-1
     )
     write_trappist1g_outputfile(c, 'results/codaccra_photochemclima_III-7b.txt', 'TRAPPIST1g CO2=10bar')
     fig, ax, ax1 = plot(c)
@@ -316,9 +329,11 @@ def setup():
 
 def main():
     setup()
-    main_I_1()
+    main_I_1(test='a')
+    main_I_1(test='b')
     main_II_1()
     main_III_7()
 
 if __name__ == '__main__':
+    threadpool_limits(limits=4)
     main()

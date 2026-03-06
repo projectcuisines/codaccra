@@ -4,7 +4,7 @@
 This folder reproduces all `Photochem.clima` calculations for the cod-accra model inter-comparison. To run this code, first use the `conda` package manager to create a new environment:
 
 ```sh
-conda create -n codaccra -c conda-forge photochem=0.6.7 matplotlib
+conda create -n codaccra -c conda-forge python=3.13 photochem=0.8.3 matplotlib
 conda activate codaccra
 ```
 

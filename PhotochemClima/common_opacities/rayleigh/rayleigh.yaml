@@ -1,0 +1,79 @@
+
+
+N2:
+  formalism: vardavas
+  data:
+    Delta: 0.0305
+    A: 29.06e-5
+    B: 7.7e-3
+  citations: [Keady2000, Penndorf1957]
+    
+CO2:
+  formalism: vardavas
+  data:
+    Delta: 0.0774
+    A: 43.9e-5
+    B: 6.4e-3
+  citations: [Keady2000, Shemansky1972]
+    
+O2:
+  formalism: vardavas
+  data:
+    Delta: 0.054
+    A: 26.63e-5
+    B: 5.07e-3
+  citations: [Keady2000, Penndorf1957]
+
+H2O:
+  formalism: vardavas 
+  data:
+    Delta: 0.000299
+    A: 24.4e-5
+    B: 5.67e-3
+  citations: [Keady2000, Ranjan2017, Murphy1977]
+  notes: Following \cite{Ranjan2017}, we use an index of 
+    refraction for air but reduced by a factor of 0.85.
+
+H2:
+  formalism: vardavas
+  data:
+    Delta: 0.0221
+    A: 1.358e-4
+    B: 7.52e-3
+  citations: [Keady2000, Penndorf1957]
+
+He:
+  formalism: vardavas
+  data:
+    Delta: 0.025
+    A: 3.48e-5
+    B: 2.3e-3
+  citations: [Keady2000, Penndorf1957]
+
+CO:
+  formalism: vardavas
+  data:
+    Delta: 0.08
+    A: 32.7e-5
+    B: 8.1e-3
+  citations: [Keady2000, Penndorf1957]
+
+CH4:
+  formalism: vardavas 
+  data:
+    Delta: 0.0
+    A: 0.00050963
+    B: 0.00057523
+  citations: [Batalha2019]
+  notes: A fit to the CH$_4$ Rayleigh scattering cross section 
+    in Picaso v3.3.
+
+NH3:
+  formalism: vardavas 
+  data:
+    Delta: 0.0
+    A: 0.00039428
+    B: 0.0022839
+  citations: [Batalha2019]
+  notes: A fit to the NH$_3$ Rayleigh scattering cross section 
+    in Picaso v3.3.
